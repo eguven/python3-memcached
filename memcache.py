@@ -367,7 +367,7 @@ class Client(local):
             cmd = "delete %s" % key
 
         try:
-            server.send_cmd(cmd)
+            server.send_cmd(cmd.encode('utf-8'))
             server.expect(b"DELETED")
         except socket.error as msg:
             if type(msg) is tuple: msg = msg[1]
