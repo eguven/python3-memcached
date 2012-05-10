@@ -589,13 +589,18 @@ class Client(local):
         dead_servers = []
 
         for server in server_keys.keys():
-            bigcmd = []
-            write = bigcmd.append
+            bigcmd = bytes()
             try:
+                newline = "\r\n".encode('utf-8')
                 for key in server_keys[server]: # These are mangled keys
                     store_info = self._val_to_store_info(mapping[prefixed_to_orig_key[key]], min_compress_len)
-                    write("set %s %d %d %d\r\n%s\r\n" % (key, store_info[0], time, store_info[1], store_info[2]))
-                server.send_cmds(''.join(bigcmd))
+                    cmd = ("set %s %d %d %d\r\n" % (key, store_info[0], time, store_info[1])).encode('utf-8')
+                    if not isinstance(store_info[2],bytes):
+                        cmd += store_info[2].encode('utf-8')
+                    else:
+                        cmd += store_info[2]
+                    bigcmd += cmd + newline
+                server.send_cmds(bigcmd)
             except socket.error as msg:
                 if type(msg) is tuple: msg = msg[1]
                 server.mark_dead(msg)
