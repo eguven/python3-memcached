@@ -589,7 +589,8 @@ class Client(local):
         dead_servers = []
 
         for server in server_keys.keys():
-            bigcmd = bytes()
+            bigcmd = bytearray()
+            write = bigcmd.extend
             try:
                 newline = "\r\n".encode('utf-8')
                 for key in server_keys[server]: # These are mangled keys
@@ -599,8 +600,8 @@ class Client(local):
                         cmd += store_info[2].encode('utf-8')
                     else:
                         cmd += store_info[2]
-                    bigcmd += cmd + newline
-                server.send_cmds(bigcmd)
+                    write(cmd + newline)
+                server.send_cmds(bytes(bigcmd))
             except socket.error as msg:
                 if type(msg) is tuple: msg = msg[1]
                 server.mark_dead(msg)
