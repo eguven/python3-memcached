@@ -619,7 +619,7 @@ class Client(local):
             try:
                 for key in keys:
                     line = server.readline()
-                    if line == 'STORED':
+                    if line == b'STORED':
                         continue
                     else:
                         notstored.append(prefixed_to_orig_key[key]) #un-mangle.
