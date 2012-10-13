@@ -32,7 +32,7 @@ The standard way to use memcache with a database is like this::
     obj = mc.get(key)
     if not obj:
         obj = backend_api.get(...)
-        mc.set(obj)
+        mc.set(key, obj)
 
     # we now have obj, and future passes through this code
     # will use the object from the cache.
@@ -377,12 +377,13 @@ class Client(local):
 
     def incr(self, key, delta=1):
         """
-        Sends a command to the server to atomically increment the value for C{key} by
-        C{delta}, or by 1 if C{delta} is unspecified.  Returns None if C{key} doesn't
-        exist on server, otherwise it returns the new value after incrementing.
+        Sends a command to the server to atomically increment the value
+        for C{key} by C{delta}, or by 1 if C{delta} is unspecified.
+        Returns None if C{key} doesn't exist on server, otherwise it
+        returns the new value after incrementing.
 
-        Note that the value for C{key} must already exist in the memcache, and it
-        must be the string representation of an integer.
+        Note that the value for C{key} must already exist in the memcache,
+        and it must be the string representation of an integer.
 
         >>> mc.set("counter", "20")  # returns 1, indicating success
         1
@@ -422,9 +423,10 @@ class Client(local):
         try:
             server.send_cmd(cmd)
             line = server.readline()
+            if line == None or line.strip() ==b'NOT_FOUND': return None
             return int(line)
         except socket.error as msg:
-            if type(msg) is tuple: msg = msg[1]
+            if isinstance(msg, tuple): msg = msg[1]
             server.mark_dead(msg)
             return None
 
