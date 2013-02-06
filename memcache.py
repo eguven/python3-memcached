@@ -635,15 +635,14 @@ class Client(local):
            Transform val to a storable representation, returning a tuple of the flags, the length of the new value, and the new value itself.
         """
         flags = 0
-        if isinstance(val, str):
+
+        # check types exactly rather than using isinstance, or subclasses
+        # will be deserialized into instances of the parent class
+        # (most blatantly, bool --> int)
+        if type(val) == str:
             pass
-        elif isinstance(val, int):
+        elif type(val) == int:
             flags |= Client._FLAG_INTEGER
-            val = "%d" % val
-            # force no attempt to compress this silly string.
-            min_compress_len = 0
-        elif isinstance(val, int):
-            flags |= Client._FLAG_LONG
             val = "%d" % val
             # force no attempt to compress this silly string.
             min_compress_len = 0
@@ -930,7 +929,7 @@ class _Host:
             self.socket.sendall((cmd + '\r\n').encode('ascii'))
         else:
             self.socket.sendall(cmd + '\r\n'.encode('ascii'))
-        
+
 
     def send_cmds(self, cmds):
         """ cmds already has trailing \r\n's applied """
