@@ -1040,7 +1040,7 @@ if __name__ == "__main__":
             print("Testing set/get {'%s': %s} ..." % (to_s(key), to_s(val)), end=' ')
             mc.set(key, val)
             newval = mc.get(key)
-            if newval == val:
+            if newval == val and type(newval) == type(val):
                 print("OK")
                 return 1
             else:
@@ -1058,8 +1058,14 @@ if __name__ == "__main__":
                     return self.bar == other.bar
                 return 0
 
+        class StrSubclass(str):
+            pass
+
         test_setget("a_string", "some random string")
+        test_setget("a_string_subclass", StrSubclass("L337 57R"))
         test_setget("an_integer", 42)
+        test_setget("bool_True", True)
+        test_setget("bool_False", False)
         if test_setget("long", int(1<<30)):
             print("Testing delete ...", end=' ')
             if mc.delete("long"):
