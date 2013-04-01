@@ -69,7 +69,7 @@ from binascii import crc32   # zlib version is not cross-platform
 serverHashFunction = crc32
 
 __author__    = "Evan Martin <martine@danga.com>"
-__version__ = "1.44"
+__version__ = "1.44.1"
 __copyright__ = "Copyright (C) 2003 Danga Interactive"
 __license__   = "Python"
 
