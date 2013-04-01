@@ -1,4 +1,10 @@
-Python3 port for pure python memcached client library. Below is the original README content.
+Python3 port for pure python memcached client library.
+
+Please report issues and submit code changes to the github repository at:
+
+    https://github.com/eguven/python3-memcached
+
+Below is the original README content.
 
 This package was originally written by Evan Martin of Danga.
 Sean Reifschneider of tummy.com, ltd. has taken over maintenance of it.
