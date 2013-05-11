@@ -695,16 +695,15 @@ class Client(local):
             bigcmd = bytearray()
             write = bigcmd.extend
             try:
-                newline = "\r\n".encode('utf-8')
+                newline = b"\r\n"
                 for key in server_keys[server]: # These are mangled keys
                     store_info = self._val_to_store_info(mapping[prefixed_to_orig_key[key]], min_compress_len)
                     if store_info:
-                        cmd = ("set %s %d %d %d\r\n" % (key, store_info[0], time, store_info[1])).encode('utf-8')
-                        if not isinstance(store_info[2],bytes):
-                            cmd += store_info[2].encode('utf-8')
-                        else:
-                            cmd += store_info[2]
-                        write(cmd + newline)
+                        cmd = bytearray(("set %s %d %d %d\r\n" % (key, store_info[0], time, store_info[1])).encode('utf-8'))
+                        # now write to bigcmd: cmd + val + newline
+                        write(cmd)
+                        write(store_info[2])
+                        write(newline)
                     else:
                         notstored.append(prefixed_to_orig_key[key])
                 server.send_cmds(bytes(bigcmd))
@@ -788,9 +787,7 @@ class Client(local):
         else:
             c = "%s %s %d %d %d\r\n" % (
                     cmd, key, store_info[0], time, store_info[1])
-        if isinstance(store_info[2], str):
-            return (c + store_info[2]).encode('utf-8')
-        elif isinstance(store_info[2], bytes):
+        if isinstance(store_info[2], bytes):
             return c.encode('utf-8') + store_info[2]
         else:
             raise _Error("_cmd_builder: unknown data type (%s)" %
