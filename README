@@ -1,4 +1,5 @@
-Python3 port for pure python memcached client library.
+Python3 port for pure python memcached client library, ported and being
+kept up to date by https://github.com/eguven
 
 Please report issues and submit code changes to the github repository at:
 
