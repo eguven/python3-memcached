@@ -743,10 +743,10 @@ class Client(local):
         # will be deserialized into instances of the parent class
         # (most blatantly, bool --> int)
         if type(val) == str:
-            pass
+            val = val.encode('utf-8')
         elif type(val) == int:
             flags |= Client._FLAG_INTEGER
-            val = "%d" % val
+            val = str(val).encode('ascii')
             # force no attempt to compress this silly string.
             min_compress_len = 0
         else:
@@ -782,7 +782,6 @@ class Client(local):
         '''A utility method to build platform specific fullcmd, mainly due
         to pickle return value type.
         '''
-        # TODO: change _val_to_store_info so we can get rid of this
         if cmd == 'cas':
             c = "cas %s %d %d %d %d\r\n" % (
                     key, store_info[0], time, store_info[1], self.cas_ids[key])
