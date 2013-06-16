@@ -294,7 +294,7 @@ class Client(local):
             while 1:
                 line = readline()
                 if not line or line.strip() == b'END': break
-                item = line.split(' ', 2)
+                item = line.decode('ascii').split(' ', 2)
                 #0 = STAT, 1 = ITEM, 2 = Value
                 slab = item[1].split(':', 2)
                 #0 = items, 1 = Slab #, 2 = Name
