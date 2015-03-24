@@ -891,12 +891,14 @@ class Client(local):
         '''
         return self._get('get', key, as_text)
 
-    def gets(self, key):
+    def gets(self, key, as_text=True):
         '''Retrieves a key from the memcache. Used in conjunction with 'cas'.
+
+        @param as_text: If False, the value is a binary blob and will be returned as a bytes
 
         @return: The value or None.
         '''
-        return self._get('gets', key)
+        return self._get('gets', key, as_text)
 
     def get_multi(self, keys, key_prefix='', as_text=True):
         '''
