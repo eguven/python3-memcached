@@ -743,6 +743,8 @@ class Client(local):
         # (most blatantly, bool --> int)
         if type(val) == str:
             val = val.encode('utf-8')
+        elif type(val) == bytes:
+            pass # we already have a valid bytestream
         elif type(val) == int:
             flags |= Client._FLAG_INTEGER
             val = str(val).encode('ascii')
