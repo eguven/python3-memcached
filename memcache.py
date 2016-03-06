@@ -743,6 +743,8 @@ class Client(local):
         # (most blatantly, bool --> int)
         if type(val) == str:
             val = val.encode('utf-8')
+        elif type(val) == bytes:
+            pass # we already have a valid bytestream
         elif type(val) == int:
             flags |= Client._FLAG_INTEGER
             val = str(val).encode('ascii')
@@ -832,7 +834,7 @@ class Client(local):
                 server.mark_dead(msg)
             return 0
 
-    def _get(self, cmd, key):
+    def _get(self, cmd, key, as_text=True):
         if self.do_check_key:
             self.check_key(key)
         server, key = self._get_server(key)
@@ -858,7 +860,7 @@ class Client(local):
                 if not rkey:
                     return None
                 try:
-                    value = self._recv_value(server, flags, rlen)
+                    value = self._recv_value(server, flags, rlen, as_text)
                 finally:
                     server.expect(b"END", raise_exception=True)
             except (_Error, socket.error) as msg:
@@ -880,21 +882,25 @@ class Client(local):
                 server.mark_dead(msg)
             return None
 
-    def get(self, key):
+    def get(self, key, as_text=True):
         '''Retrieves a key from the memcache.
+    
+        @param as_text: If False, the value is a binary blob and will be returned as a bytes
 
         @return: The value or None.
         '''
-        return self._get('get', key)
+        return self._get('get', key, as_text)
 
-    def gets(self, key):
+    def gets(self, key, as_text=True):
         '''Retrieves a key from the memcache. Used in conjunction with 'cas'.
 
+        @param as_text: If False, the value is a binary blob and will be returned as a bytes
+
         @return: The value or None.
         '''
-        return self._get('gets', key)
+        return self._get('gets', key, as_text)
 
-    def get_multi(self, keys, key_prefix=''):
+    def get_multi(self, keys, key_prefix='', as_text=True):
         '''
         Retrieves multiple keys from the memcache doing just one query.
 
@@ -928,6 +934,7 @@ class Client(local):
         @param keys: An array of keys.
         @param key_prefix: A string to prefix each key when we communicate with memcache.
             Facilitates pseudo-namespaces within memcache. Returned dictionary keys will not have this prefix.
+        @param as_text: If False, values are binary blobs and will be returned as bytes
         @return:  A dictionary of key/value pairs that were available. If key_prefix was provided, the keys in the retured dictionary will not have it present.
 
         '''
@@ -961,7 +968,7 @@ class Client(local):
                     if rkey is not None:
                         if isinstance(rkey,bytes):
                             rkey = rkey.decode()
-                        val = self._recv_value(server, flags, rlen)
+                        val = self._recv_value(server, flags, rlen, as_text)
                         retvals[prefixed_to_orig_key[rkey]] = val   # un-prefix returned key.
                     line = server.readline()
             except (_Error, socket.error) as msg:
@@ -991,7 +998,7 @@ class Client(local):
         else:
             return (None, None, None)
 
-    def _recv_value(self, server, flags, rlen):
+    def _recv_value(self, server, flags, rlen, as_text=True):
         rlen += 2 # include \r\n
         buf = server.recv(rlen)
         if len(buf) != rlen:
@@ -1005,7 +1012,10 @@ class Client(local):
 
         if  flags == 0 or flags == Client._FLAG_COMPRESSED:
             # Either a bare string or a compressed string now decompressed...
-            val = buf.decode('utf-8')
+            if as_text:
+                val = buf.decode('utf-8')
+            else:
+                val = buf # directly return the bytes
         elif flags & Client._FLAG_INTEGER:
             val = int(buf)
         elif flags & Client._FLAG_LONG:
