@@ -1,3 +1,8 @@
+Important Deprecation Note: This was a py3 compatibility port of https://github.com/linsomniac/python-memcached
+which since then has added py23. So you should use that.
+
+---
+
 Python3 port for pure python memcached client library, ported and being
 kept up to date by https://github.com/eguven
 
