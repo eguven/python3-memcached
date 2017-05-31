@@ -1,3 +1,14 @@
+Suport for Django 1.11 add dummy MAX_ENTRIES and CULL_FREQUENCY
+
+For pip install
+
+```
+pip install -e git+https://github.com/jpmcpe/python3-memcached.git#egg=python3_memcached
+```
+
+Below is the original README content.
+
+----
 Important Deprecation Note: This was a py3 compatibility port of https://github.com/linsomniac/python-memcached
 which since then has added py23. So you should use that.
 
