@@ -145,7 +145,7 @@ class Client(local):
 
     def __init__(self, servers, debug=0, pickleProtocol=0,
                  pickler=pickle.Pickler, unpickler=pickle.Unpickler,
-                 pload=None, pid=None,
+                 pload=None, pid=None, MAX_ENTRIES=300, CULL_FREQUENCY=3,
                  server_max_key_length=SERVER_MAX_KEY_LENGTH,
                  server_max_value_length=SERVER_MAX_VALUE_LENGTH,
                  dead_retry=_DEAD_RETRY, socket_timeout=_SOCKET_TIMEOUT,
