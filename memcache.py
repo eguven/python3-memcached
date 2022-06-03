@@ -566,7 +566,7 @@ class Client(local):
         of the value using the zlib.compress() routine. If the value being cached is
         a string, then the length of the string is measured, else if the value is an
         object, then the length of the pickle result is measured. If the resulting
-        attempt at compression yeilds a larger string than the input, then it is
+        attempt at compression yields a larger string than the input, then it is
         discarded. For backwards compatability, this parameter defaults to 0,
         indicating don't ever try to compress.
         '''
@@ -596,7 +596,7 @@ class Client(local):
         the value being cached is a string, then the length of the string is
         measured, else if the value is an object, then the length of the
         pickle result is measured. If the resulting attempt at compression
-        yeilds a larger string than the input, then it is discarded. For
+        yields a larger string than the input, then it is discarded. For
         backwards compatability, this parameter defaults to 0, indicating
         don't ever try to compress.
         '''
@@ -675,7 +675,7 @@ class Client(local):
         of the value using the zlib.compress() routine. If the value being cached is
         a string, then the length of the string is measured, else if the value is an
         object, then the length of the pickle result is measured. If the resulting
-        attempt at compression yeilds a larger string than the input, then it is
+        attempt at compression yields a larger string than the input, then it is
         discarded. For backwards compatability, this parameter defaults to 0,
         indicating don't ever try to compress.
         @return: List of keys which failed to be stored [ memcache out of memory, etc. ].
@@ -928,7 +928,7 @@ class Client(local):
         @param keys: An array of keys.
         @param key_prefix: A string to prefix each key when we communicate with memcache.
             Facilitates pseudo-namespaces within memcache. Returned dictionary keys will not have this prefix.
-        @return:  A dictionary of key/value pairs that were available. If key_prefix was provided, the keys in the retured dictionary will not have it present.
+        @return:  A dictionary of key/value pairs that were available. If key_prefix was provided, the keys in the returned dictionary will not have it present.
 
         '''
 
