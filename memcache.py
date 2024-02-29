@@ -267,13 +267,13 @@ class Client(local):
             else:
                 s.send_cmd(b'stats ' + str(stat_args).encode('utf-8'))
             serverData = {}
-            data.append(( name.encode('ascii'), serverData ))
+            data.append(( name.encode('utf-8'), serverData ))
             readline = s.readline
             while 1:
                 line = readline()
                 if not line or line.strip() == b'END': break
-                stats = line.decode('ascii').split(' ', 2)
-                serverData[stats[1].encode('ascii')] = stats[2].encode('ascii')
+                stats = line.decode('utf-8').split(' ', 2)
+                serverData[stats[1].encode('utf-8')] = stats[2].encode('utf-8')
 
         return(data)
 
@@ -294,7 +294,7 @@ class Client(local):
             while 1:
                 line = readline()
                 if not line or line.strip() == b'END': break
-                item = line.split(' ', 2)
+                item = line.decode('utf-8').split(' ', 2)
                 #0 = STAT, 1 = ITEM, 2 = Value
                 slab = item[1].split(':', 2)
                 #0 = items, 1 = Slab #, 2 = Name
